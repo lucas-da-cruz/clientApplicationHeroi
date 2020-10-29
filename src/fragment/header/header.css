@@ -1,0 +1,26 @@
+header#main-header{
+    background-image: linear-gradient(to left bottom,#32a84c,#75FF6F);    
+    height: 130px;
+  }
+  
+  header#main-header .header-content{
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 10px;
+    height: 125px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  header#main-header .header-content p {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 42px
+  }
+
+  #cadastro {
+    color: #ffffff;
+    font-size: 20px
+  }
