@@ -7,23 +7,14 @@ import Form from 'react-bootstrap/Form';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown';
 import {Button} from 'primereact/button';
+import {Link} from 'react-router-dom';
 
 export default function InsertHeroi() {
     const { register, handleSubmit, errors } = useForm();
-    const [selectedPoder, setSelectedPoder] = useState(null);
+    const [selectedPoder, setSelectedPoder] = useState([]);
     const [selectedUniverso, setSelectedUniverso] = useState(null);
-
-    useEffect(() => {
-        console.log("Iniciando");
-    });
-
-    const onSubmit = data => {
-
-    };
-
-    const onCountryChange = (e) => {
-        setSelectedUniverso(e.value);
-    }
+    const [avisoPoder, setAvisoPoder] = useState(false);
+    const [avisoUniverso, setAvisoUniverso] = useState(false);
 
     const poderes = [
         {nome: 'Fogo', id: '1'},
@@ -32,10 +23,36 @@ export default function InsertHeroi() {
         {nome: 'Voar', id: '4'}
     ];
 
-    const universo = [
+    const universoOptions = [
         {nome: 'EY Comics', id: 1},
         {nome: 'Trainee Comics', id: 2}
     ];
+
+    useEffect(() => {
+        console.log("Iniciando");
+    });
+
+    const onSubmit = data => {
+        if(selectedPoder.length === 0){
+            setAvisoPoder(true);
+            console.log("gera mensagem selectedPoder");
+            return;
+        }
+        setAvisoPoder(false);
+        if(selectedUniverso === null){
+            setAvisoUniverso(true);
+            console.log("gera mensagem selectedUniverso");
+            return;
+        }
+        setAvisoUniverso(false);
+        data.universo = selectedUniverso;
+        data.poder = selectedPoder;
+        console.log(data);
+    };
+
+    const onCountryChange = (e) => {
+        setSelectedUniverso(e.value);
+    }
 
     const selectedUniversoTemplate = (option, props) => {
         if (option) {
@@ -79,6 +96,8 @@ export default function InsertHeroi() {
                                     maxLength="50"
                                     ref={register({required:true, maxLength: 50})}
                                     placeholder="Insira aqui nome do herói"/>
+                                {errors.nome && errors.nome.type === "required" && <span className="alertField">Campo nome é obrigatório</span>}
+                                {errors.nome && errors.nome.type === "maxLength" && <span className="alertField">O tamanho máximo é de 50 caracteres</span> }
                             </center>
                             <br/>
                         </Col>
@@ -92,7 +111,12 @@ export default function InsertHeroi() {
                                     options={poderes}
                                     onChange={(e) => setSelectedPoder(e.value)}
                                     optionLabel="nome"
-                                    placeholder="Selecione um poder"/>
+                                    placeholder="Selecione um poder"
+                                    ref={register({maxLength: 50})}/>
+                                    <br/>
+                                    {avisoPoder ?
+                                    <span className="alertField">Pelo menos um poder deve ser selecionado</span>
+                                    : null}
                             </center>
                             <br/>
                         </Col>
@@ -103,7 +127,7 @@ export default function InsertHeroi() {
                                     id="universo"
                                     name="universo"
                                     value={selectedUniverso}
-                                    options={universo}
+                                    options={universoOptions}
                                     onChange={onCountryChange}
                                     optionLabel="nome"
                                     filter
@@ -111,22 +135,38 @@ export default function InsertHeroi() {
                                     filterBy="nome"
                                     placeholder="Selecione um universo"
                                     valueTemplate={selectedUniversoTemplate} 
-                                    itemTemplate={universoOptionTemplate} />
+                                    itemTemplate={universoOptionTemplate}
+                                    ref={register({required:true, maxLength: 50})}/>
+                                    <br/>
+                                    {avisoUniverso ?
+                                    <span className="alertField">Um universo deve ser selecionado</span>
+                                    : null}
                             </center>
                             <br/>
                         </Col>
                     </Row>
                     <br/><br/>
-                    <Row className="justify-content-md-center">
-                        <Col>
-                            <center>
-                                <Button 
-                                    label="Cadastrar herói"
-                                    size="45"
-                                    className="p-button-primary"
-                                    type="submit"/>
+                    <Row lg={6} className="justify-content-md-center">
+                      <Col>
+                          <center>
+                            <Link to="/heroi">
+                              <Button 
+                                label="Voltar"
+                                size="45"
+                                className="p-button-secondary"
+                              />
+                            </Link>
                             </center>
                         </Col>
+                      <Col>
+                        <center>
+                          <Button
+                            label="Cadastrar herói"
+                            size="45"
+                            className="p-button-primary"
+                            type="submit"/>
+                        </center>
+                      </Col>
                     </Row>
                 </form>
                 <br/><br/><br/>

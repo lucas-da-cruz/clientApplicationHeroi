@@ -12,16 +12,32 @@ import {Link} from 'react-router-dom';
 
 export default function DetalheHeroi() {
     const { register, handleSubmit, errors } = useForm();
-    const [selectedPoder, setSelectedPoder] = useState(null);
+    const [selectedPoder, setSelectedPoder] = useState([]);
     const [selectedUniverso, setSelectedUniverso] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [avisoPoder, setAvisoPoder] = useState(false);
+    const [avisoUniverso, setAvisoUniverso] = useState(false);
 
     useEffect(() => {
         console.log("Iniciando");
     });
 
     const onSubmit = data => {
-
+      if(selectedPoder.length === 0){
+          setAvisoPoder(true);
+          console.log("gera mensagem selectedPoder");
+          return;
+      }
+      setAvisoPoder(false);
+      if(selectedUniverso === null){
+          setAvisoUniverso(true);
+          console.log("gera mensagem selectedUniverso");
+          return;
+      }
+      setAvisoUniverso(false);
+      data.universo = selectedUniverso;
+      data.poder = selectedPoder;
+      console.log(data);
     };
 
     const onCountryChange = (e) => {
@@ -84,6 +100,8 @@ export default function DetalheHeroi() {
                                     maxLength="50"
                                     ref={register({required:true, maxLength: 50})}
                                     placeholder="Insira aqui nome do herói"/>
+                                {errors.nome && errors.nome.type === "required" && <span className="alertField">Campo nome é obrigatório</span>}
+                                {errors.nome && errors.nome.type === "maxLength" && <span className="alertField">O tamanho máximo é de 50 caracteres</span>}
                             </center>
                             <br/>
                         </Col>
@@ -112,6 +130,10 @@ export default function DetalheHeroi() {
                               onChange={(e) => setSelectedPoder(e.value)}
                               optionLabel="nome"
                               placeholder="Selecione um poder"/>
+                              <br/>
+                            {avisoPoder ?
+                            <span className="alertField">Pelo menos um poder deve ser selecionado</span>
+                            : null}
                         </center>
                         <br/>
                       </Col>
@@ -131,6 +153,10 @@ export default function DetalheHeroi() {
                                 placeholder="Selecione um universo"
                                 valueTemplate={selectedUniversoTemplate} 
                                 itemTemplate={universoOptionTemplate} />
+                                <br/>
+                              {avisoUniverso ?
+                              <span className="alertField">Um universo deve ser selecionado</span>
+                              : null}
                           </center>
                           <br/>
                       </Col>
