@@ -6,8 +6,8 @@ import HeaderLogado from './fragment/header/headerLogado';
 import Footer from './fragment/footer';
 
 import Cadastro from './pages/cadastroUser';
-import LoginAdmin from './pages/loginAdmin';
-import ServiceLogin from './pages/loginAdmin/serviceLogin';
+import LoginAdmin from './pages/login';
+import ServiceLogin from './pages/login/serviceLogin';
 import CookieService from './util/CookieService';
 
 import Home from './pages/home';
