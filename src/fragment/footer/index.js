@@ -27,7 +27,7 @@ function Footer({ children }) {
                     • <Link to="/"> Página inicial</Link>
                 </center>
                 <center>
-                    &copy; {new Date().getFullYear()} Copyright: 3Cs - Conexão Cidade e Cidadão
+                    &copy; {new Date().getFullYear()} Copyright: Heróis
                 </center>
             </div>
         </div>

@@ -32,7 +32,7 @@ export default function Cadastrar (){
                             <Row className="justify-content-md-center">
                                 <Col lg={4} md={10}>
                                     <br/>
-                                    <Form.Label className="required">Nome completo</Form.Label>
+                                    <Form.Label className="required">Nome</Form.Label>
                                     <Form.Control
                                         type="text"
                                         name="name"
@@ -42,29 +42,6 @@ export default function Cadastrar (){
                                     {errors.nome && errors.nome.type === "required" && <span className="alertField">Campo nome é obrigatório</span>}
                                     {errors.nome && errors.nome.type === "maxLength" && <span className="alertField">O tamanho máximo é de 50 caracteres</span> }
                                 </Col>
-                                <Col lg={4} md={10}>
-                                    <br/>
-                                    <Form.Label>Telefone</Form.Label><br/>
-                                    <Form.Control
-                                        type="text"
-                                        name="contact"
-                                        maxLength="14"
-                                        ref={register({maxLength: 14})}
-                                        placeholder="Insira aqui seu ddd e telefone (apenas números)"/>
-                                    {errors.telefone && errors.telefone.type === "maxLength" && <span className="alertField">O tamanho máximo é de 11 números</span> }
-                                </Col>
-                                <Col lg={4} md={10}>
-                                    <br/>
-                                    <Form.Label>Data nascimento</Form.Label><br/>
-                                    <Calendar
-                                        dateFormat="dd/mm/yy"
-                                        monthNavigator={true}
-                                        yearNavigator={true}
-                                        yearRange="1900:2020"
-                                        placeholder="dd/mm/aaaa"/>
-                                </Col>
-                            </Row>
-                            <Row className="justify-content-md-center">
                                 <Col lg={4} md={10}>
                                     <br/>
                                     <Form.Label className="required">Email</Form.Label>
@@ -77,6 +54,8 @@ export default function Cadastrar (){
                                     {errors.email && errors.email.type === "required" && <span className="alertField">Campo email é obrigatório</span>}
                                     {errors.email && errors.email.type === "maxLength" && <span className="alertField">O tamanho máximo é de 50 caracteres</span> }
                                 </Col>
+                            </Row>
+                            <Row className="justify-content-md-center">
                                 <Col lg={4} md={10}>
                                     <br/>
                                     <Form.Label className="required">Senha (mínimo de 6 catacteres)</Form.Label><br/>
@@ -122,7 +101,7 @@ export default function Cadastrar (){
                                         disabled={confirmaSenha}
                                         label="Cadastrar-se"
                                         size="45"
-                                        className="p-button-success"
+                                        className="p-button-primary"
                                         type="submit"/>
                                     </center>
                                 </Col>

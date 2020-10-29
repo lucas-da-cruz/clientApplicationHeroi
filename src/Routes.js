@@ -5,13 +5,14 @@ import HeaderSemLogar from './fragment/header/headerSemLogar';
 import HeaderLogado from './fragment/header/headerLogado';
 import Footer from './fragment/footer';
 
-import Cadastro from './pages/cadastro';
+import Cadastro from './pages/cadastroUser';
 import LoginAdmin from './pages/loginAdmin';
-import Login from './pages/login';
-import ServiceLogin from './pages/login/serviceLogin';
+import ServiceLogin from './pages/loginAdmin/serviceLogin';
 import CookieService from './util/CookieService';
 
 import Home from './pages/home';
+import DetalheHeroi from './pages/getHeroi';
+import InsertHeroi from './pages/insertHeroi';
 
 class Routes extends Component{
 
@@ -48,6 +49,10 @@ class Routes extends Component{
         <HeaderSemLogar/>
         <Switch>
             <Route exact path="/login" component={LoginAdmin}/>
+            <Route exact path="/cadastro" component={Cadastro}/>
+            <Route exact path="/heroi" component={Home}/>
+            <Route exact path="/heroi/:id" component={DetalheHeroi}/>
+            <Route exact path="/insertHeroi" component={InsertHeroi}/>
             <Route path="*" component={LoginAdmin}/>
         </Switch>
         <Footer/>
