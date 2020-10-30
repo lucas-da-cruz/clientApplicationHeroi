@@ -14,13 +14,66 @@ import Home from './pages/home';
 import DetalheHeroi from './pages/getHeroi';
 import InsertHeroi from './pages/insertHeroi';
 
+import Loading from './components/loading';
+
 class Routes extends Component{
 
-  state = {
+  /*state = {
     isAuthenticated: false
+  };*/
+  state = {
+    isAuthenticated: 0
   };
 
   componentDidMount(){
+    let token = CookieService.getCookie("token");
+    if(token !== ""){
+      ServiceLogin.isAuthenticated(token).then(response => {
+        this.setState({isAuthenticated: 1});
+      }).catch(erro => {
+        this.setState({isAuthenticated: 2});
+        console.log(erro);
+      });
+    } else {
+      this.setState({isAuthenticated: 2});
+    }
+  }
+
+  render(){
+    return this.state.isAuthenticated === 0 ? (
+      <BrowserRouter>
+        <HeaderSemLogar/>
+        <Loading/>
+        <Footer/>
+      </BrowserRouter>
+    ) : (
+      this.state.isAuthenticated === 1 ? (
+        <BrowserRouter>
+          <HeaderLogado/>
+          <Switch>
+            <Route exact path="/home" component={Home}/>
+            <Route exact path="/insertHeroi" component={InsertHeroi}/>
+            <Route exact path="/heroi/:id" component={DetalheHeroi}/>
+            <Route path="*" component={Home}/>
+          </Switch>
+          <Footer/>
+        </BrowserRouter>
+      ) : (
+        <BrowserRouter>
+          <HeaderSemLogar/>
+          <Switch>
+              <Route exact path="/login" component={LoginAdmin}/>
+              <Route exact path="/cadastro" component={Cadastro}/>
+              <Route path="*" component={LoginAdmin}/>
+          </Switch>
+          <Footer/>
+        </BrowserRouter>
+      )
+    );
+  }
+}
+
+  /*componentDidMount(){
     let token = CookieService.getCookie("token");
     if(token !== ""){
       ServiceLogin.isAuthenticated(token).then(response => {
@@ -58,6 +111,6 @@ class Routes extends Component{
       </BrowserRouter>
     );
   }
-}
+}*/
 
 export default Routes;
