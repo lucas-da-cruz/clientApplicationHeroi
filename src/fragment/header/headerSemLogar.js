@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './header.css';
 import {Link} from 'react-router-dom';
-import { Button, Segment } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 
 export default class HeaderSemLogar extends Component{
 

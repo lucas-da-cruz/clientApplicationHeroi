@@ -161,7 +161,7 @@ export default function InsertHeroi() {
                       <Col>
                         <center>
                           <Button
-                            label="Cadastrar herói"
+                            label="Cadastrar"
                             size="45"
                             className="p-button-primary"
                             type="submit"/>

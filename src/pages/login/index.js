@@ -30,24 +30,31 @@ class LoginAdmin extends Component{
         const {email, password} = this.state;
 
         return ServiceLogin.getToken(email, password).then(response => {
-            
-            response.json().then(data => {
-                document.cookie = `token=${data.token}`;
-                document.cookie = `token=${data.token}`;
-                document.location.assign('/heroi');
-            }).catch((erro) => {
-                console.log("Erro JSON()" + erro);
-            })
+            if(response.status === 200){
+                response.json().then(data => {
+                    document.cookie = `token=${data.token}`;
+                    document.location.assign('/heroi');
+                }).catch((erro) => {
+                    console.log("Erro JSON()" + erro);
+                });
+            } else {
+                this.setState({loading: false});
+                console.log(response);
+                this.showError("E-mail ou senha incorretos");
+            }            
         }).catch(erro => {
             console.log(erro.response);
         });
-        this.setState({loading: false});
     }
 
     entrar(e){
         e.preventDefault();
         this.setState({loading: true});
         this.login();
+    }
+
+    showError(messagem) {
+        this.messages.show({severity: 'error', summary: messagem });
     }
 
   render(){
@@ -101,7 +108,7 @@ class LoginAdmin extends Component{
                                                             <center>
                                                                 <Button 
                                                                 label="Entrar"
-                                                                className="p-button-secondary"
+                                                                className="p-button-primary"
                                                                 size="109"
                                                                 type="submit"/>
                                                             </center>
@@ -111,7 +118,7 @@ class LoginAdmin extends Component{
                                                         <th>
                                                             <br/>
                                                             <center>
-                                                                <Link>Esqueceu sua senha?</Link>
+                                                                <Link to="/cadastro">Ainda não é cadastrado?</Link>
                                                             </center>
                                                         </th>
                                                     </tr>

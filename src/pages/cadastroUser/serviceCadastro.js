@@ -2,13 +2,9 @@ import {CONFIG} from './../../config/config';
 
 class ServiceLogin{
 
-    getToken(email, senha){
-        var user = {
-            email : email,
-            senha : senha
-        }
-        
-        return fetch(`${CONFIG.URL_DOMAIN}/auth`, {
+    insertUser(user){
+       
+        return fetch(`${CONFIG.URL_DOMAIN}/usuarioAdmin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

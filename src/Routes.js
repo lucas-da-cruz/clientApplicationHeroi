@@ -35,11 +35,13 @@ class Routes extends Component{
   }
 
   render(){
-    return  this.state.isAuthenticated === true ? (
+    return this.state.isAuthenticated === true ? (
       <BrowserRouter>
         <HeaderLogado/>
         <Switch>
-        <Route exact path="/heroi" component={Home}/>
+          <Route exact path="/home" component={Home}/>
+          <Route exact path="/insertHeroi" component={InsertHeroi}/>
+          <Route exact path="/heroi/:id" component={DetalheHeroi}/>
           <Route path="*" component={Home}/>
         </Switch>
         <Footer/>
@@ -50,9 +52,6 @@ class Routes extends Component{
         <Switch>
             <Route exact path="/login" component={LoginAdmin}/>
             <Route exact path="/cadastro" component={Cadastro}/>
-            <Route exact path="/heroi" component={Home}/>
-            <Route exact path="/heroi/:id" component={DetalheHeroi}/>
-            <Route exact path="/insertHeroi" component={InsertHeroi}/>
             <Route path="*" component={LoginAdmin}/>
         </Switch>
         <Footer/>

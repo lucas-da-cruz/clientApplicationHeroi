@@ -27,9 +27,9 @@ export default function Home() {
     </div>;
   };
 
-  const dialogFuncMap = {
+  /*const dialogFuncMap = {
     'displayConfirmation': setDisplayConfirmation
-}
+  }*/
 
   const onClick = () => {
     setDisplayConfirmation(true);
@@ -48,7 +48,6 @@ export default function Home() {
         </div>
     );
   }
-
 
   return (
     <div>
