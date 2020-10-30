@@ -6,8 +6,8 @@ class ServiceLogin{
             senha : senha
         }
         
-        //return fetch('http://localhost:8080/auth', {
-        return fetch('https://back-end-3cs.herokuapp.com/auth', {
+        return fetch('http://localhost:8080/auth', {
+        //return fetch('https://back-end-3cs.herokuapp.com/auth', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

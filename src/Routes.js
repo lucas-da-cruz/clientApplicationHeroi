@@ -39,7 +39,7 @@ class Routes extends Component{
       <BrowserRouter>
         <HeaderLogado/>
         <Switch>
-          <Route exact path="/home" component={Home}/>
+        <Route exact path="/heroi" component={Home}/>
           <Route path="*" component={Home}/>
         </Switch>
         <Footer/>

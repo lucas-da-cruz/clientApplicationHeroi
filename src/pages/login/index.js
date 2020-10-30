@@ -33,7 +33,8 @@ class LoginAdmin extends Component{
             
             response.json().then(data => {
                 document.cookie = `token=${data.token}`;
-                document.location.assign('/home');
+                document.cookie = `token=${data.token}`;
+                document.location.assign('/heroi');
             }).catch((erro) => {
                 console.log("Erro JSON()" + erro);
             })

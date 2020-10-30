@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './header.css';
 import { Button, Segment } from 'semantic-ui-react'
+import {Link} from 'react-router-dom';
 
 export default class HeaderLogado extends Component{
 
@@ -16,16 +17,19 @@ export default class HeaderLogado extends Component{
   }
 
   render(){
-
-    return(
-        <header id="main-header">
-            <p>Heróis</p>
-            <Button 
-                inverted
-                onClick={()=> this.logout()}>
-                    Sair
-            </Button>
-        </header>
+    return(      
+    <header id="main-header">
+      <div className="header-content">
+        <Link to="/">
+          <p>Heróis</p>
+        </Link>
+        <Button 
+            inverted
+            onClick={()=> this.logout()}>
+                Sair
+        </Button>
+        </div>
+    </header>
   );
 }
 }
