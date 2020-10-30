@@ -17,10 +17,7 @@ import InsertHeroi from './pages/insertHeroi';
 import Loading from './components/loading';
 
 class Routes extends Component{
-
-  /*state = {
-    isAuthenticated: false
-  };*/
+  
   state = {
     isAuthenticated: 0
   };
@@ -73,7 +70,12 @@ class Routes extends Component{
   }
 }
 
-  /*componentDidMount(){
+  /*
+  state = {
+    isAuthenticated: false
+  };
+
+  componentDidMount(){
     let token = CookieService.getCookie("token");
     if(token !== ""){
       ServiceLogin.isAuthenticated(token).then(response => {

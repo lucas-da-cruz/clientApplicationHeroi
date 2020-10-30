@@ -1,6 +1,31 @@
+import CookieService from './../../util/CookieService';
+import {CONFIG} from './../../config/config';
+
 class ServiceHome{
 
-    getHerois(email, senha){
+    findAllHerois(){
+        let token = CookieService.getCookie("token");
+
+        return fetch(`${CONFIG.URL_DOMAIN}/heroi`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+    };
+    
+    desativaHeroi(id){
+        let token = CookieService.getCookie("token");
+
+        return fetch(`${CONFIG.URL_DOMAIN}/heroi/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
         
     };
 }

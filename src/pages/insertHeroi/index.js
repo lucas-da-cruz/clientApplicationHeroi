@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -8,46 +8,81 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown';
 import {Button} from 'primereact/button';
 import {Link} from 'react-router-dom';
+import Loading from './../../components/loading';
+import ServiceInsertHeroi from './serviceInsertHeroi';
+import {Messages} from 'primereact/messages';
 
 export default function InsertHeroi() {
+    let messages = useRef(null);
     const { register, handleSubmit, errors } = useForm();
     const [selectedPoder, setSelectedPoder] = useState([]);
     const [selectedUniverso, setSelectedUniverso] = useState(null);
     const [avisoPoder, setAvisoPoder] = useState(false);
     const [avisoUniverso, setAvisoUniverso] = useState(false);
-
-    const poderes = [
-        {nome: 'Fogo', id: '1'},
-        {nome: 'Água', id: '2'},
-        {nome: 'Terra', id: '3'},
-        {nome: 'Voar', id: '4'}
-    ];
-
-    const universoOptions = [
-        {nome: 'EY Comics', id: 1},
-        {nome: 'Trainee Comics', id: 2}
-    ];
+    const [universoOptions, setUniversoOptions] = useState([]);
+    const [poderes, setPoderes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("Iniciando");
-    });
+        ServiceInsertHeroi.findAllUniverso().then(response => {
+            if(response.status === 200){
+                response.json().then(data => {
+                    setUniversoOptions(data);
+                }).catch((erro) => {
+                    console.log("Erro: " + erro);
+                });
+            }
+          }).catch(erro => {
+            console.log(erro.response);
+        });
+
+        ServiceInsertHeroi.findAllPoderes().then(response => {
+            if(response.status === 200){
+                response.json().then(data => {
+                    setPoderes(data);
+                }).catch((erro) => {
+                    console.log("Erro: " + erro);
+                });
+            }
+          }).catch(erro => {
+            console.log(erro.response);
+        });
+
+        window.setTimeout(function() {
+            setLoading(false);
+        }, 1500);
+    }, []);
 
     const onSubmit = data => {
         if(selectedPoder.length === 0){
             setAvisoPoder(true);
-            console.log("gera mensagem selectedPoder");
             return;
         }
         setAvisoPoder(false);
         if(selectedUniverso === null){
             setAvisoUniverso(true);
-            console.log("gera mensagem selectedUniverso");
             return;
         }
         setAvisoUniverso(false);
         data.universo = selectedUniverso;
         data.poder = selectedPoder;
-        console.log(data);
+
+        setLoading(true);
+        return ServiceInsertHeroi.insertHeroi(data).then(response => {
+            if(response.status === 201){
+                showSuccess();
+                window.setTimeout(function() {
+                    document.location.assign('/heroi');
+                }, 1500);
+            } else {
+                setLoading(false);
+                showError();
+            }            
+          }).catch(erro => {
+            setLoading(false);
+            showError();
+            console.log(erro.response);
+        });
     };
 
     const onCountryChange = (e) => {
@@ -77,13 +112,25 @@ export default function InsertHeroi() {
         );
     }
 
+    const showSuccess = () => {
+        messages.current.show({severity: 'success', summary: 'Herói adicionado com sucesso!'});
+    };
+
+    const showError = () => {
+        messages.current.show({severity: 'error', summary: 'Ops, algo de inesperado aconteceu'});
+    };
+
     return (
         <div>
-            <Container>
-                <br/>
-                <center>
-                    <h2>Cadastrar novo herói</h2>
-                </center><br/>
+        <Container>
+        <br/>
+            <center>
+                <h2>Cadastrar novo herói</h2>
+            </center><br/>
+            <Messages ref={messages} />
+        { loading ? 
+        <Loading/> :
+            <div>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Row className="justify-content-md-center">
                         <Col lg={4} md={10}>
@@ -147,29 +194,32 @@ export default function InsertHeroi() {
                     </Row>
                     <br/><br/>
                     <Row lg={6} className="justify-content-md-center">
-                      <Col>
-                          <center>
+                        <Col>
+                            <center>
                             <Link to="/heroi">
-                              <Button 
+                                <Button 
                                 label="Voltar"
                                 size="45"
                                 className="p-button-secondary"
-                              />
+                                />
                             </Link>
                             </center>
                         </Col>
-                      <Col>
+                        <Col>
                         <center>
-                          <Button
+                            <Button
                             label="Cadastrar"
                             size="45"
                             className="p-button-primary"
                             type="submit"/>
                         </center>
-                      </Col>
+                        </Col>
                     </Row>
                 </form>
                 <br/><br/><br/>
+            </div>
+            
+            }
             </Container>
         </div>
     );

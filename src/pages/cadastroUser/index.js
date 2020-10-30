@@ -21,29 +21,28 @@ export default function Cadastrar (){
     const [confirmaSenha, setConfirmaSenha] = useState(true);
 
     const onSubmit = data => {
-    setLoading(true);
-    data.senha = senha;
-    return ServiceCadastro.insertUser(data).then(response => {
-        if(response.status === 201){
-            response.json().then(data => {
-                showSuccess();
-                //document.location.assign('/');
-                setInterval(function(){ document.location.assign('/') }, 3000);
-            }).catch((erro) => {
+        setLoading(true);
+        data.senha = senha;
+        return ServiceCadastro.insertUser(data).then(response => {
+            if(response.status === 201){
+                response.json().then(data => {
+                    showSuccess();
+                    setInterval(function(){ document.location.assign('/') }, 3000);
+                }).catch((erro) => {
+                    setLoading(false);
+                    showError();
+                    console.log("Erro JSON()" + erro);
+                });
+            } else {
                 setLoading(false);
                 showError();
-                console.log("Erro JSON()" + erro);
+                console.log(response);
+            }
+            }).catch(erro => {
+                setLoading(false);
+                showError();
+                console.log(erro.response);
             });
-        } else {
-            setLoading(false);
-            showError();
-            console.log(response);
-        }
-        }).catch(erro => {
-            setLoading(false);
-            showError();
-            console.log(erro.response);
-        });
     }
 
     const setPassword = (e) => {
