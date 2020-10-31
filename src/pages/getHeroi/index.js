@@ -9,18 +9,63 @@ import { Dropdown } from 'primereact/dropdown';
 import {Button} from 'primereact/button';
 import Loading from '../../components/loading';
 import {Link} from 'react-router-dom';
+import ServiceGetHeroi from './serviceGetHeroi';
+import ServiceInsertHeroi from './../insertHeroi/serviceInsertHeroi';
+
 
 export default function DetalheHeroi() {
     const { register, handleSubmit, errors } = useForm();
     const [selectedPoder, setSelectedPoder] = useState([]);
     const [selectedUniverso, setSelectedUniverso] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [avisoPoder, setAvisoPoder] = useState(false);
     const [avisoUniverso, setAvisoUniverso] = useState(false);
+    const [heroi, setHeroi] = useState([]);
+    const [poderes, setPoderes] = useState([]);
+    const [universo, setUniverso] = useState([]);
 
     useEffect(() => {
-        console.log("Iniciando");
-    });
+      var url = window.location.pathname;
+      var idHeroi = url.split("/")[2];
+      ServiceInsertHeroi.findAllUniverso().then(response => {
+        if(response.status === 200){
+            response.json().then(data => {
+              setUniverso(data);
+            }).catch((erro) => {
+              console.log("Erro: " + erro);
+            });
+        }
+      }).catch(erro => {
+        console.log(erro.response);
+      });
+
+      ServiceInsertHeroi.findAllPoderes().then(response => {
+          if(response.status === 200){
+              response.json().then(data => {
+                  setPoderes(data);
+              }).catch((erro) => {
+                  console.log("Erro: " + erro);
+              });
+          }
+        }).catch(erro => {
+          console.log(erro.response);
+      });
+
+      ServiceGetHeroi.getHeroi(idHeroi).then(response =>
+        response.json().then(data => {
+          console.log(data);
+          setHeroi(data);
+        }).catch((erro) => {
+            console.log("Erro: " + erro);
+        })
+      ).catch((erro) => {
+        console.log(erro);
+      });
+  
+      window.setTimeout(function() {
+        setLoading(false);
+      }, 1500);
+    }, []);
 
     const onSubmit = data => {
       if(selectedPoder.length === 0){
@@ -43,18 +88,6 @@ export default function DetalheHeroi() {
     const onCountryChange = (e) => {
         setSelectedUniverso(e.value);
     }
-
-    const poderes = [
-        {nome: 'Fogo', id: '1'},
-        {nome: 'Água', id: '2'},
-        {nome: 'Terra', id: '3'},
-        {nome: 'Voar', id: '4'}
-    ];
-
-    const universo = [
-        {nome: 'EY Comics', id: 1},
-        {nome: 'Trainee Comics', id: 2}
-    ];
 
     const selectedUniversoTemplate = (option, props) => {
         if (option) {
@@ -96,6 +129,7 @@ export default function DetalheHeroi() {
                                     <Form.Control
                                     id="nome"
                                     name="nome"
+                                    defaultValue={heroi.nome}
                                     type="text"
                                     maxLength="50"
                                     ref={register({required:true, maxLength: 50})}
@@ -125,8 +159,8 @@ export default function DetalheHeroi() {
                             <MultiSelect
                               id="poder"
                               name="poder"
-                              value={selectedPoder}
                               options={poderes}
+                              value={heroi.poder}
                               onChange={(e) => setSelectedPoder(e.value)}
                               optionLabel="nome"
                               placeholder="Selecione um poder"/>
@@ -143,7 +177,7 @@ export default function DetalheHeroi() {
                               <Dropdown
                                 id="universo"
                                 name="universo"
-                                value={selectedUniverso}
+                                value={heroi.universo}
                                 options={universo}
                                 onChange={onCountryChange}
                                 optionLabel="nome"
@@ -177,7 +211,7 @@ export default function DetalheHeroi() {
                       <Col>
                         <center>
                           <Button 
-                            label="Atualizar herói"
+                            label="Atualizar"
                             size="45"
                             className="p-button-primary"
                             type="submit"/> 
