@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -11,9 +11,10 @@ import Loading from '../../components/loading';
 import {Link} from 'react-router-dom';
 import ServiceGetHeroi from './serviceGetHeroi';
 import ServiceInsertHeroi from './../insertHeroi/serviceInsertHeroi';
-
+import {Messages} from 'primereact/messages';
 
 export default function DetalheHeroi() {
+    let messages = useRef(null);
     const { register, handleSubmit, errors } = useForm();
     const [selectedPoder, setSelectedPoder] = useState([]);
     const [selectedUniverso, setSelectedUniverso] = useState(null);
@@ -42,7 +43,8 @@ export default function DetalheHeroi() {
       ServiceInsertHeroi.findAllPoderes().then(response => {
           if(response.status === 200){
               response.json().then(data => {
-                  setPoderes(data);
+                //
+                setPoderes(data);
               }).catch((erro) => {
                   console.log("Erro: " + erro);
               });
@@ -54,6 +56,8 @@ export default function DetalheHeroi() {
       ServiceGetHeroi.getHeroi(idHeroi).then(response =>
         response.json().then(data => {
           console.log(data);
+          setSelectedPoder(data.poder);
+          setSelectedUniverso(data.universo);
           setHeroi(data);
         }).catch((erro) => {
             console.log("Erro: " + erro);
@@ -68,26 +72,41 @@ export default function DetalheHeroi() {
     }, []);
 
     const onSubmit = data => {
+      setLoading(true);
       if(selectedPoder.length === 0){
           setAvisoPoder(true);
-          console.log("gera mensagem selectedPoder");
+          setLoading(false);
           return;
       }
       setAvisoPoder(false);
       if(selectedUniverso === null){
           setAvisoUniverso(true);
-          console.log("gera mensagem selectedUniverso");
+          setLoading(false);
           return;
       }
       setAvisoUniverso(false);
+
       data.universo = selectedUniverso;
       data.poder = selectedPoder;
-      console.log(data);
+      var url = window.location.pathname;
+      var idHeroi = url.split("/")[2];
+      return ServiceGetHeroi.updateHeroi(idHeroi, data).then(response => {
+        if(response.status === 200){
+            showSuccess();
+            window.setTimeout(function() {
+                document.location.assign('/heroi');
+            }, 1000);
+        } else {
+            setLoading(false);
+            showError();
+        }            
+      }).catch(erro => {
+        setLoading(false);
+        showError();
+        console.log(erro.response);
+    });
+    setLoading(false);
     };
-
-    const onCountryChange = (e) => {
-        setSelectedUniverso(e.value);
-    }
 
     const selectedUniversoTemplate = (option, props) => {
         if (option) {
@@ -112,11 +131,27 @@ export default function DetalheHeroi() {
         );
     }
 
+    const updatePoder = (value) => {
+      heroi.poder = value;
+      setHeroi(heroi);
+      console.log(heroi)
+    }
+
+    const showSuccess = () => {
+      messages.current.show({severity: 'success', summary: 'Herói atualizado com sucesso!'});
+    };
+
+    const showError = () => {
+        messages.current.show({severity: 'error', summary: 'Ops, algo de inesperado aconteceu'});
+    };
+
     return (
       <div>
+        <Container>
+        <Messages ref={messages} />
         { loading ? 
         <Loading/> :
-            <Container>
+              <div>
                 <br/>
                 <center>
                     <h2>Detalhes Herói</h2>
@@ -145,6 +180,7 @@ export default function DetalheHeroi() {
                               <Form.Control
                                 type="text"
                                 maxLength="50"
+                                defaultValue={heroi.dataCadastrada}
                                 ref={register({required:true, maxLength: 50})}
                                 placeholder="dd/mm/aaaa"
                                 disabled={true}/>
@@ -160,7 +196,7 @@ export default function DetalheHeroi() {
                               id="poder"
                               name="poder"
                               options={poderes}
-                              value={heroi.poder}
+                              value={selectedPoder}
                               onChange={(e) => setSelectedPoder(e.value)}
                               optionLabel="nome"
                               placeholder="Selecione um poder"/>
@@ -177,9 +213,9 @@ export default function DetalheHeroi() {
                               <Dropdown
                                 id="universo"
                                 name="universo"
-                                value={heroi.universo}
+                                value={selectedUniverso}
                                 options={universo}
-                                onChange={onCountryChange}
+                                onChange={(e) => setSelectedUniverso(e.value)}
                                 optionLabel="nome"
                                 filter
                                 showClear
@@ -220,8 +256,9 @@ export default function DetalheHeroi() {
                     </Row>
                 </form>
                 <br/><br/><br/>
-            </Container>
+              </div>
         }
+        </Container>
         </div>
     );
 }
