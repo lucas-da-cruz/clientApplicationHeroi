@@ -11,8 +11,10 @@ import ServiceLogin from './pages/login/serviceLogin';
 import CookieService from './util/CookieService';
 
 import Home from './pages/home';
+import HeroiDesativado from './pages/heroiDesativado';
 import DetalheHeroi from './pages/getHeroi';
 import InsertHeroi from './pages/insertHeroi';
+import ErrorUrl from './pages/notFound';
 
 import Loading from './components/loading';
 
@@ -49,9 +51,12 @@ class Routes extends Component{
           <HeaderLogado/>
           <Switch>
             <Route exact path="/home" component={Home}/>
+            <Route exact path="/heroi" component={Home}/>
+            <Route exact path="/" component={Home}/>
             <Route exact path="/insertHeroi" component={InsertHeroi}/>
             <Route exact path="/heroi/:id" component={DetalheHeroi}/>
-            <Route path="*" component={Home}/>
+            <Route exact path="/HeroiDesativado" component={HeroiDesativado}/>
+            <Route path="*" component={ErrorUrl}/>
           </Switch>
           <Footer/>
         </BrowserRouter>
@@ -69,50 +74,5 @@ class Routes extends Component{
     );
   }
 }
-
-  /*
-  state = {
-    isAuthenticated: false
-  };
-
-  componentDidMount(){
-    let token = CookieService.getCookie("token");
-    if(token !== ""){
-      ServiceLogin.isAuthenticated(token).then(response => {
-        this.setState({isAuthenticated: true});
-      }).catch(erro => {
-        this.setState({isAuthenticated: false});
-        console.log(erro);
-      });
-    } else {
-      this.setState({isAuthenticated: false});
-    }
-  }
-
-  render(){
-    return this.state.isAuthenticated === true ? (
-      <BrowserRouter>
-        <HeaderLogado/>
-        <Switch>
-          <Route exact path="/home" component={Home}/>
-          <Route exact path="/insertHeroi" component={InsertHeroi}/>
-          <Route exact path="/heroi/:id" component={DetalheHeroi}/>
-          <Route path="*" component={Home}/>
-        </Switch>
-        <Footer/>
-      </BrowserRouter>
-    ) : (
-      <BrowserRouter>
-        <HeaderSemLogar/>
-        <Switch>
-            <Route exact path="/login" component={LoginAdmin}/>
-            <Route exact path="/cadastro" component={Cadastro}/>
-            <Route path="*" component={LoginAdmin}/>
-        </Switch>
-        <Footer/>
-      </BrowserRouter>
-    );
-  }
-}*/
 
 export default Routes;

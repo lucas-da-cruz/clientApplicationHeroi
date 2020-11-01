@@ -8,7 +8,7 @@ import Loading from './../../components/loading';
 import {Button} from 'primereact/button';
 import {Link} from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
-import ServiceHome from './serviceHome';
+import ServiceHeroiDesativado from './serviceHeroiDesativado';
 import {InputText} from 'primereact/inputtext';
 import {Messages} from 'primereact/messages';
 
@@ -25,7 +25,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    ServiceHome.findAllHerois().then(response => {
+    ServiceHeroiDesativado.findAllHeroisDesativado().then(response => {
       if(response.status === 200){
           response.json().then(data => {
             setHerois(data)
@@ -49,12 +49,12 @@ export default function Home() {
     </div>;
   };
 
-  const desativarHeroi = (rowData) => {
+  const ativaHeroi = (rowData) => {
     return <div>
         <Button
           type="button"
-          icon="pi pi-times"
-          className="p-button-danger"
+          label="Ativar"
+          className="p-button-primary"
           style={{marginRight: '.5em'}}
           onClick={() => onClick(rowData.id)}></Button>
     </div>;
@@ -72,10 +72,12 @@ export default function Home() {
   const desativaHeroi = () => {
     setDisplayConfirmation(false);
     setLoading(true);
-    ServiceHome.desativaHeroi(idParaDesativar).then(response => {
+    ServiceHeroiDesativado.desativaHeroi(idParaDesativar).then(response => {
       if(response.status === 200){
         showSuccess();
-        refreshTable();
+        window.setTimeout(function() {
+            document.location.assign('/heroi');
+        }, 1500);
       } else {
         showError();
         setLoading(false);
@@ -84,34 +86,14 @@ export default function Home() {
         showError();
         console.log(erro.response);
     });
-    window.setTimeout(function() {
-      setLoading(false);
-    }, 2500);
     setIdParaDesativar();
-  }
-
-  const refreshTable = () => {
-    ServiceHome.findAllHerois().then(response => {
-      if(response.status === 200){
-          response.json().then(data => {
-            setHerois(data)
-          }).catch((erro) => {
-              console.log("Erro: " + erro);
-          });
-      }
-    }).catch(erro => {
-        console.log(erro.response);
-    });
-    window.setTimeout(function() {
-      setLoading(false);
-    }, 3000);
   }
 
   const renderFooter = (name) => {
     return (
         <div>
             <Button label="Cancelar" icon="pi pi-times" onClick={() => onHide()} className="p-button-text" />
-            <Button label="Desativar" icon="pi pi-check" onClick={() => desativaHeroi()} autoFocus />
+            <Button label="Ativar" icon="pi pi-check" onClick={() => desativaHeroi()} autoFocus />
         </div>
     );
   }
@@ -124,24 +106,19 @@ export default function Home() {
   );
 
   const showSuccess = () => {
-    messages.current.show({severity: 'success', summary: 'Herói desativado com sucesso!'});
+    messages.current.show({severity: 'success', summary: 'Herói ativado com sucesso!'});
   };
 
   const showError = () => {
       messages.current.show({severity: 'error', summary: 'Ops, algo de inesperado aconteceu'});
   };
 
-  const paginatorRight = 
-  <Link to="/heroiDesativado">
-    <Button type="button" icon="pi pi-trash" label="Heróis desativados" className="p-button-text" />
-  </Link>;
-
   return (
     <div>
       <Container>
         <br/>
         <center>
-          <h2>Heróis cadastrados</h2>
+          <h2>Heróis desativados</h2>
         </center>
       <Messages ref={messages} />
       { loading ? 
@@ -156,14 +133,14 @@ export default function Home() {
             onHide={() => onHide('displayConfirmation')}>
               <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                  <span>Você tem certeza que deseja desativar esse herói?</span>
+                  <span>Você tem certeza que deseja ativar esse herói?</span>
               </div>
           </Dialog>
           <br/><br/>
           <Row className="justify-content-md-center">
             <Col>
-              <Link to="/insertHeroi">
-                <Button label="Adicionar um novo herói" icon="pi pi-plus" iconPos="left" className="p-button-primary"/>
+              <Link to="/">
+                <Button label="Retornar" icon="pi pi-arrow-left" iconPos="left" className="p-button-primary"/>
               </Link>
             </Col>
           </Row>
@@ -180,13 +157,12 @@ export default function Home() {
                 paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                 currentPageReportTemplate="Exibindo {first} a {last} de {totalRecords}"
                 rowsPerPageOptions={[10,20,50]}
-                paginatorRight={paginatorRight}
-                emptyMessage="Nenhum herói encontrado">
+                emptyMessage="Nenhum herói desativado encontrado">
                   <Column field="id" header="ID" sortable filter={true} filterPlaceholder="ID" style={{textAlign:'center', width: '6em'}}/>
                   <Column field="nome" header="Nome" sortable filter={true} filterPlaceholder="Nome"/>
                   <Column field="universo.nome" header="Universo" sortable filter={true} filterPlaceholder="Universo"/>
                   <Column body={visualizarHeroi} style={{textAlign:'center', width: '4em'}}/>
-                  <Column body={desativarHeroi} style={{textAlign:'center', width: '4em'}}/>
+                  <Column body={ativaHeroi} style={{textAlign:'center', width: '8em'}}/>
               </DataTable>
             </Col>
           </Row>
