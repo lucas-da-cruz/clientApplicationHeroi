@@ -26,6 +26,10 @@ class LoginAdmin extends Component{
         this.login = this.login.bind(this);
     }
 
+    componentDidMount(){
+        return ServiceLogin.upServer();
+    }
+
     login = async () => {
         const {email, password} = this.state;
 

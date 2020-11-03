@@ -26,6 +26,12 @@ class ServiceLogin{
         });
     };
 
+    upServer(){
+        return fetch(`${CONFIG.URL_DOMAIN}/upServer`, {
+            method: 'GET'
+        });
+    };
+
 }
 
 export default new ServiceLogin();
