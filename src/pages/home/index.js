@@ -72,7 +72,7 @@ export default function Home() {
   const desativaHeroi = () => {
     setDisplayConfirmation(false);
     setLoading(true);
-    ServiceHome.desativaHeroi(idParaDesativar).then(response => {
+    ServiceHome.alteraStatus(idParaDesativar).then(response => {
       if(response.status === 200){
         showSuccess();
         refreshTable();
@@ -86,7 +86,7 @@ export default function Home() {
     });
     window.setTimeout(function() {
       setLoading(false);
-    }, 2500);
+    }, 3000);
     setIdParaDesativar();
   }
 

@@ -72,7 +72,7 @@ export default function Home() {
   const desativaHeroi = () => {
     setDisplayConfirmation(false);
     setLoading(true);
-    ServiceHeroiDesativado.desativaHeroi(idParaDesativar).then(response => {
+    ServiceHeroiDesativado.alteraStatus(idParaDesativar).then(response => {
       if(response.status === 200){
         showSuccess();
         window.setTimeout(function() {

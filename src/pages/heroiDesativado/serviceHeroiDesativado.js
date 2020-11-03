@@ -16,11 +16,11 @@ class ServiceHeroiDesativado{
         
     };
     
-    desativaHeroi(id){
+    alteraStatus(id){
         let token = CookieService.getCookie("token");
 
-        return fetch(`${CONFIG.URL_DOMAIN}/heroi/${id}`, {
-            method: 'DELETE',
+        return fetch(`${CONFIG.URL_DOMAIN}/heroi/alteraStatus/${id}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
